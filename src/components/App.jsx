@@ -15,29 +15,16 @@ export class App extends Component {
     ],
     filter: '',
   };
-
-  addContact = data => {
-    const { contacts } = this.state;
-    const newContact = {
-      ...data,
-      id: nanoid(),
-    };
-
-    if (contacts.find(contact => contact.name === newContact.name)) {
-      alert(`${newContact.name} is already in contacts`);
+  addContact = (name, number) => {
+    const duplicate = this.state.contacts.find(
+      contact => contact.name === name
+    );
+    if (duplicate) {
+      alert('Error!');
       return;
     }
-
-    this.setState(prevState => {
-      return { contacts: [...prevState.contacts, newContact] };
-    });
-  };
-
-  deleteContact = id => {
-    this.setState(prevState => {
-      return {
-        contacts: prevState.contacts.filter(contact => contact.id !== id),
-      };
+    this.setState({
+      contacts: [...this.state.contacts, { id: nanoid(), name, number }],
     });
   };
 
@@ -47,24 +34,24 @@ export class App extends Component {
     });
   };
 
-  filterContacts = () => {
-    const { filter, contacts } = this.state;
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLowerCase())
-    );
+  deleteContact = id => {
+    const filterId = this.state.contacts.filter(contact => contact.id !== id);
+    this.setState({
+      contacts: [...filterId],
+    });
   };
 
   render() {
-    const { filter } = this.state;
     return (
       <div>
         <h1 className={css.title}>Phonebook</h1>
         <Form onSubmit={this.addContact} />
         <h2 className={css.contacts}>Contacts</h2>
-        <Filter value={filter} onChange={this.filterContacts} />
+        <Filter onChange={this.changeFilter} value={this.state.filter} />
         <ContactList
-          contacts={this.filterContacts()}
-          onDeleteContact={this.deleteContact}
+          onClick={this.deleteContact}
+          contacts={this.state.contacts}
+          filter={this.state.filter}
         />
       </div>
     );

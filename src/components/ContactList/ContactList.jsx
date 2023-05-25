@@ -1,19 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import css from './ContactList.module.css';
 
-export const ContactList = ({ contacts, onDeleteContact }) => {
+export const ContactList = ({ onClick, contacts, filter }) => {
+  const filterName = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(filter.toLowerCase())
+  );
   return (
     <ul>
-      {contacts.map(({ name, number, id }) => (
-        <li key={id}>
+      {filterName.map(contact => (
+        <li key={contact.id}>
           <p>
-            {name}: {number}
+            {contact.name}: {contact.number}
           </p>
           <button
             className={css.delete}
-            onClick={() => onDeleteContact(id)}
             type="button"
+            onClick={() => onClick(contact.id)}
           >
             Delete
           </button>
@@ -21,15 +23,4 @@ export const ContactList = ({ contacts, onDeleteContact }) => {
       ))}
     </ul>
   );
-};
-
-ContactList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.exact({
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-      id: PropTypes.string.isRequired,
-      onDeleteContact: PropTypes.func.isRequired,
-    })
-  ),
 };

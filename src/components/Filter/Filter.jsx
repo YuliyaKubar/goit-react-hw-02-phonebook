@@ -11,6 +11,7 @@ export const Filter = ({ value, onChange }) => {
         type="text"
         value={value}
         onChange={onChange}
+        name="filter"
       />
     </label>
   );
