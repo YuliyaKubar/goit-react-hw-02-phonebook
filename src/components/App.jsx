@@ -15,7 +15,7 @@ export class App extends Component {
     ],
     filter: '',
   };
-  addContact = (name, number) => {
+  addContact = ({ name, number }) => {
     const duplicate = this.state.contacts.find(
       contact => contact.name === name
     );
